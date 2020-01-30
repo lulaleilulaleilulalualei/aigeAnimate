@@ -1,27 +1,55 @@
 <template>
-    <div class="fm2Content">
-        <div class="fm2ContentBg"></div>
+    <div class="fm2Content" @touchend="touchEnd">
+        <div class="fm2ContentBg" :style="{backgroundImage: `url(${loadImgs.FM21.imgSrc.src})`}"></div>
         <transition name="fm22" @before-enter="handleBeforeEnterFm22" @enter="handleEnterFm22">
-            <div v-if="fm22Show" class="fm2Img_2"><img src="../assets/img/FM2-2.png" alt=""></div>
+            <div v-if="fm22Show" class="fm2Img_2"><img :src="loadImgs.FM22.imgSrc.src" alt=""></div>
         </transition>
     </div>
 </template>
 
 <script>
 import  Velocity from 'velocity-animate'
+import { mapGetters , mapActions } from 'vuex';
 
 export default {
     data() {
         return {
-            fm22Show: false
+            fm22Show: false,
+            startVal: 0,
+            moveVal: 0
         }
     },
+    computed: {
+        ...mapGetters([
+            'loadImgs'
+        ])
+    },
+    props: {
+        _activeIndex: {
+            type: Number,
+            default: 0
+        }
+    },
+    watch: {
+       _activeIndex(val) {
+           if(val !== 1) {
+              this.fm22Show = false
+           }
+       } 
+    },
     mounted() {
-        setTimeout(() => {
-            this.fm22Show = true
-        }, 1200)
+        // setTimeout(() => {
+        //     this.fm22Show = true
+        // }, 1200)
     },
     methods: {
+        touchEnd(evt) {
+            if(!this.fm22Show) {
+                this.fm22Show = true
+            }
+            this.startVal = 0
+            this.moveVal = 0
+        },
         handleBeforeEnterFm22(el) {
             el.style.translateY = '0'
             el.style.opacity = 0
@@ -32,12 +60,10 @@ export default {
                 translateY: '-1.1rem',
                 opacity: 1
             }, {
-                duration: 1500,
+                duration: 1200,
                 complete: () => {
-                    setTimeout(() => {
-                        that.$emit("toJump3", true)
-                        done()
-                    }, 1500)
+                    that.$emit("toJump3", true)
+                    done()
                 }
             })
         }
@@ -51,14 +77,15 @@ export default {
         height: 100%;
         position: absolute;
         top: 0;
-        right: -7.5rem;
+        right: 0;
         z-index: 20;
         .fm2ContentBg {
             width: 100%;
             height: 100%;
             position: relative;
             z-index: 10;
-            background: url(../assets/img/FM2-1.jpg) no-repeat center;
+            background-repeat: no-repeat;
+            background-position: center;
             background-size: cover;
         }
         .fm2Img_2 {

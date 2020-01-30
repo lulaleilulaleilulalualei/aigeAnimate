@@ -1,36 +1,68 @@
 <template>
-    <div class="p001Content">
-        <div class="p001ContentBg"></div>
+    <div class="p001Content" @touchend="touchEnd">
+        <div class="p001ContentBg" :style="{backgroundImage: `url(${loadImgs.p0011.imgSrc.src})`}"></div>
         <transition name="p0012" @before-enter="handleBeforeEnterpoo112" @enter="handleEnterpoo112">
-            <div v-if="p0012Show" ref="p001_2" class="p001_2"><img src="../assets/img/p001-2.png" alt=""></div>
+            <div v-if="p0012Show" ref="p001_2" class="p001_2"><img :src="loadImgs.p0012.imgSrc.src" alt=""></div>
         </transition>
         <transition name="poo13" @before-enter="handleBeforeEnterpoo113" @enter="handleEnterpoo113">
-            <div v-if="p0013Show" class="p001_3"><img src="../assets/img/p001-3.png" alt=""></div>
+            <div v-if="p0013Show" class="p001_3"><img :src="loadImgs.p0013.imgSrc.src" alt=""></div>
         </transition>
     </div>
 </template>
 
 <script>
 import  Velocity from 'velocity-animate'
+import { mapGetters , mapActions } from 'vuex';
 
 export default {
     data() {
         return {
             p0012Show: false,
-            p0013Show: false
+            p0013Show: false,
+            isCanSlide: false,
+            startVal: 0,
+            moveVal: 0
         }
     },
     computed: {
+        ...mapGetters([
+            'loadImgs'
+        ]),
         currentH() {
             return window.innerHeight
         }
     },
+    props: {
+        _activeIndex: {
+            type: Number,
+            default: 0
+        }
+    },
+    watch: {
+       _activeIndex(val) {
+           if(val !== 2) {
+              this.p0012Show = false
+              this.p0013Show = false
+               this.isCanSlide = false
+           }
+       } 
+    },
     mounted() {
-        setTimeout(() => {
-            this.p0012Show = true
-        }, 1200)
+        
     },
     methods: {
+        touchEnd(evt) {
+            if(!this.p0012Show) {
+                this.p0012Show = true
+            }else {
+                if(!this.p0013Show && this.isCanSlide) {
+                    this.p0013Show = true
+                    this.isCanSlide = false
+                }
+            }
+            this.startVal = 0
+            this.moveVal = 0
+        },
         handleBeforeEnterpoo112(el) {
             el.style.translateY = '0'
             el.style.opacity = 0
@@ -43,10 +75,8 @@ export default {
             }, {
                 duration: 1200,
                 complete: () => {
-                    setTimeout(() => {
-                        this.p0013Show = true
-                        done()
-                    }, 1500)
+                    this.isCanSlide = true
+                    done()
                 }
             })
         },
@@ -65,10 +95,8 @@ export default {
             }, {
                 duration: 1500,
                 complete: () => {
-                    setTimeout(() => {
-                        that.$emit("toJump4", true)
-                        done()
-                    }, 1500)
+                   that.$emit("toJump4", true)
+                    done()
                 }
             })
             
@@ -83,14 +111,15 @@ export default {
         height: 100%;
         position: absolute;
         top: 0;
-        right: -7.5rem;
+        right: 0;
         z-index: 20;
         .p001ContentBg {
             width: 100%;
             height: 100%;
             position: relative;
             z-index: 10;
-            background: url(../assets/img/p001-1.jpg) no-repeat center;
+            background-repeat: no-repeat;
+            background-position: center;
             background-size: cover;
         }
         .p001_2 {

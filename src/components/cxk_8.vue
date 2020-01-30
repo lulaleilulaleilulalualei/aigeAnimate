@@ -1,16 +1,22 @@
 <template>
     <div class="p006Content">
-        <div class="p006ContentBg"></div>
+        <div class="p006ContentBg" :style="{backgroundImage: `url(${loadImgs.p006.imgSrc.src})`}"></div>
     </div>
 </template>
 
 <script>
+import { mapGetters , mapActions } from 'vuex';
 
 export default {
     data() {
         return {
             
         }
+    },
+    computed: {
+        ...mapGetters([
+            'loadImgs'
+        ])
     },
     mounted(){
         
@@ -27,7 +33,7 @@ export default {
         height: 100%;
         position: absolute;
         top: 0;
-        right: -7.5rem;
+        right: 0;
         z-index: 20;
         .p006ContentBg {
             width: 100%;
@@ -36,7 +42,8 @@ export default {
             top: 0;
             left: 0;
             z-index: 20;
-            background: url(../assets/img/P006.jpg) no-repeat center;
+            background-repeat: no-repeat;
+            background-position: center;
             background-size: cover;
         }
         

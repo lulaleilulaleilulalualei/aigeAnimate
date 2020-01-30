@@ -1,24 +1,52 @@
 <template>
     <div class="p004Content">
         <div :style="{opacity: isPlayVideo? 0: 1}">
-            <div class="p004ContentBg"></div>
+            <div class="p004ContentBg" :style="{backgroundImage: `url(${loadImgs.p0041.imgSrc.src})`}"></div>
             <transition name="p0042" @before-enter="handleBeforeEnterp0042" @enter="handleEnterp0042">
-                <div v-if="p0042ImgShow" class="p0042Img_2" @click="toPlayVideo"><img src="../assets/img/P004-2.png" alt=""></div>
+                <div v-if="p0042ImgShow" class="p0042Img_2" @click="toPlayVideo"><img :src="loadImgs.p0042.imgSrc.src" alt=""></div>
             </transition>
         </div>
         <div class="videoBox">
-            <video ref="video" src="../assets/img/P004-3.mp4"></video>
+            <video ref="video_1" v-if="isShowVideo"  x5-playsinline="" playsinline="" webkit-playsinline="" src="../assets/img/P004-3.mp4"></video>
         </div>
     </div>
 </template>
 
 <script>
+import { mapGetters , mapActions } from 'vuex';
+
 export default {
     data() {
         return {
             p0042ImgShow: false,
-            isPlayVideo: false
+            isPlayVideo: false,
+            isShowVideo: true
         }
+    },
+     computed: {
+        ...mapGetters([
+            'loadImgs'
+        ])
+    },
+    props: {
+        _activeIndex: {
+            type: Number,
+            default: 0
+        }
+    },
+    watch: {
+       _activeIndex(val) {
+           if(val === 5) {
+                this.p0042ImgShow = true
+            }else {
+                this.p0042ImgShow = false
+                this.isPlayVideo = false
+                this.isShowVideo = false    
+                setTimeout(() => {
+                    this.isShowVideo = true
+                }, 10)
+            }
+       } 
     },
     mounted() {
         setTimeout(() => {
@@ -28,12 +56,19 @@ export default {
     methods: {
         toPlayVideo() {
             this.isPlayVideo = true
-            this.$refs.video.play()
+            this.$refs.video_1.play()
             this.$emit("toPlayVideo", true)
-            this.$refs.video.onended = () => {
+            this.$refs.video_1.onended = () => {
+                this.$emit("toJump7", true)
+                this.p0042ImgShow = false
                 setTimeout(() => {
-                    this.$emit("toJump7", true)
-                }, 1000)
+                    this.p0042ImgShow = true
+                }, 600)
+                this.isPlayVideo = false
+                this.isShowVideo = false
+                setTimeout(() => {
+                    this.isShowVideo = true
+                }, 10)
             }
         },
         handleBeforeEnterp0042(el) {
@@ -60,7 +95,7 @@ export default {
         height: 100%;
         position: absolute;
         top: 0;
-        right: -7.5rem;
+        right: 0;
         z-index: 20;
         .p004ContentBg {
             width: 100%;
@@ -69,7 +104,8 @@ export default {
             top: 0;
             left: 0;
             z-index: 20;
-            background: url(../assets/img/p004-1.jpg) no-repeat center;
+            background-repeat: no-repeat;
+            background-position: center;
             background-size: cover;
         }
         .p0042Img_2 {
@@ -95,6 +131,7 @@ export default {
             video {
                 width: 100%;
                 height: auto;
+                min-height: 4.8rem;
             }
         }
     }

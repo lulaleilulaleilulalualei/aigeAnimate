@@ -1,7 +1,7 @@
 <template>
     <div class="p005Content">
         <transition @before-leave="handleBeforeEnterVideo" @leave="handleEnterVideo">
-            <div v-if="!isHideBg" class="p005ContentBg">
+            <div v-if="!isHideBg" class="p005ContentBg" :style="{backgroundImage: `url(${loadImgs.p0051.imgSrc.src})`}">
                 <div class="toBtnYes" @click="toShowYesVideo"></div>
                 <div class="toBtnNo" @click="toShowNoVideo"></div>
             </div>
@@ -15,6 +15,7 @@
 
 <script>
 import  Velocity from 'velocity-animate'
+import { mapGetters , mapActions } from 'vuex';
 
 export default {
     data() {
@@ -23,6 +24,26 @@ export default {
             yesVideo: false,
             noVideo: false
         }
+    },
+    computed: {
+        ...mapGetters([
+            'loadImgs'
+        ])
+    },
+    props: {
+        _activeIndex: {
+            type: Number,
+            default: 0
+        }
+    },
+    watch: {
+       _activeIndex(val) {
+           if(val !== 6) {
+                this.isHideBg = false
+                this.yesVideo = false
+                this.noVideo = false
+            }
+       } 
     },
     methods: {
         handleBeforeEnterVideo(el) {
@@ -44,9 +65,12 @@ export default {
             this.$nextTick(() => {
                 this.$refs.yerVideo.play()
                 this.$refs.yerVideo.onended = () => {
+                    this.$emit("toJump8", true)
                     setTimeout(() => {
-                        this.$emit("toJump8", true)
-                    }, 1000)
+                        this.isHideBg = false
+                        this.yesVideo = false
+                    }, 100)
+                    
                 }
             })
         },
@@ -57,9 +81,11 @@ export default {
             this.$nextTick(() => {
                 this.$refs.noVideo.play()
                 this.$refs.noVideo.onended = () => {
+                    this.$emit("toJump8", true)
                     setTimeout(() => {
-                        this.$emit("toJump8", true)
-                    }, 1000)
+                        this.isHideBg = false
+                        this.noVideo = false
+                    }, 100)
                 }
             })
         }
@@ -73,7 +99,7 @@ export default {
         height: 100%;
         position: absolute;
         top: 0;
-        right: -7.5rem;
+        right: 0;
         z-index: 20;
         .p005ContentBg {
             width: 100%;
@@ -82,7 +108,8 @@ export default {
             top: 0;
             left: 0;
             z-index: 20;
-            background: url(../assets/img/P005-1.jpg) no-repeat center;
+            background-repeat: no-repeat;
+            background-position: center;
             background-size: cover;
             .toBtnYes {
                 position: absolute;

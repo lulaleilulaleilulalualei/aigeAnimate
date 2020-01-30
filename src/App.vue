@@ -1,15 +1,20 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <cxkPdl></cxkPdl>
   </div>
 </template>
 
 <script>
 import rem from './assets/js/rem.js'
+import cxkPdl from './components/cxk_pdl'
+
 export default {
   name: "app",
   created() {
     rem()
+  },
+  components: { cxkPdl },
+  mounted() {
   }
 };
 </script>

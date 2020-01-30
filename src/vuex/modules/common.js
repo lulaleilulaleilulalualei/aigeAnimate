@@ -1,23 +1,23 @@
 import *as types from '../types';
 
  const state = {
-	mineIndex: "", //默认显示首页
+	loadImgs: null, //loading加载
 	
  }
 
  const getters = {
-	mineIndex: state => state.mineIndex
+	loadImgs: state => state.loadImgs
  }
 
  const mutations  = {
- 	[types.INDEX_SHOW](state, str) {
- 		state.mineIndex = str
+ 	[types.LOADING_COUNT](state, obj) {
+ 		state.loadImgs = obj
  	}
  }
 
  const actions = {
- 	toChangeIndex({commit}, str) {
- 		commit(types.INDEX_SHOW, str)
+ 	toShowImgs({commit}, obj) {
+ 		commit(types.LOADING_COUNT, obj)
  	}
  }
 

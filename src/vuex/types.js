@@ -1,3 +1,3 @@
 
 //公共操作
-export const INDEX_SHOW = "INDEX_SHOW"  //首页显示
+export const LOADING_COUNT = "LOADING_COUNT"  //首页显示

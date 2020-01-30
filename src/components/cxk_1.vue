@@ -1,35 +1,36 @@
 <template>
     <div class="fmContent">
-        <div class="fmContentBg"></div>
+        <div class="fmContentBg" :style="{backgroundImage: `url(${loadImgs.FM1.imgSrc.src})`}"></div>
         <transition name="fm2" @before-enter="handleBeforeEnterFm2" @enter="handleEnterFm2">
-            <div v-if="fm2Show" class="fmImg_2"><img src="../assets/img/FM-2.png" alt=""></div>
+            <div v-if="fm2Show" class="fmImg_2"><img :src="loadImgs.FM2.imgSrc.src" alt=""></div>
         </transition>
         <transition name="fm3" @before-enter="handleBeforeEnterFm3" @enter="handleEnterFm3">
-            <div v-if="fm3Show" class="fmImg_3"><img src="../assets/img/FM-3.png" alt=""></div>
+            <div v-if="fm3Show" class="fmImg_3"><img :src="loadImgs.FM3.imgSrc.src" alt=""></div>
         </transition>
         <transition name="fm4" @before-enter="handleBeforeEnterFm4" @enter="handleEnterFm4">
-            <div v-if="fm4Show" class="fmImg_4"><img src="../assets/img/FM-4.png" alt=""></div>
+            <div v-if="fm4Show" class="fmImg_4"><img :src="loadImgs.FM4.imgSrc.src" alt=""></div>
         </transition>
         <transition name="fm5" @before-enter="handleBeforeEnterFm5" @enter="handleEnterFm5">
-            <div v-if="fm5Show" class="fmImg_5"><img src="../assets/img/FM-5.png" alt=""></div>
+            <div v-if="fm5Show" class="fmImg_5"><img :src="loadImgs.FM5.imgSrc.src" alt=""></div>
         </transition>
         <transition name="fm6" @before-enter="handleBeforeEnterFm6" @enter="handleEnterFm6">
-            <div v-if="fm6Show" class="fmImg_6"><img src="../assets/img/FM-6.png" alt=""></div>
+            <div v-if="fm6Show" class="fmImg_6"><img :src="loadImgs.FM6.imgSrc.src" alt=""></div>
         </transition>
         <transition name="fm7" @before-enter="handleBeforeEnterFm7" @enter="handleEnterFm7">
-            <div v-if="fm7Show" class="fmImg_7"><img src="../assets/img/FM-7.png" alt=""></div>
+            <div v-if="fm7Show" class="fmImg_7"><img :src="loadImgs.FM7.imgSrc.src" alt=""></div>
         </transition>
         <transition name="fm8" @before-enter="handleBeforeEnterFm8" @enter="handleEnterFm8">
-            <div v-if="fm8Show" class="fmImg_8"><img src="../assets/img/FM-8.png" alt=""></div>
+            <div v-if="fm8Show" class="fmImg_8"><img :src="loadImgs.FM8.imgSrc.src" alt=""></div>
         </transition>
         <transition name="fm9" @before-enter="handleBeforeEnterFm9" @enter="handleEnterFm9">
-            <div v-if="fm9Show" class="fmImg_9"><img src="../assets/img/FM-9.png" alt=""></div>
+            <div v-if="fm9Show" class="fmImg_9"><img :src="loadImgs.FM9.imgSrc.src" alt=""></div>
         </transition>
     </div>
 </template>
 
 <script>
 import  Velocity from 'velocity-animate'
+import { mapGetters , mapActions } from 'vuex';
 
 export default {
     data() {
@@ -44,13 +45,47 @@ export default {
             fm9Show: false,
         }
     },
+    props: {
+        _activeIndex: {
+            type: Number,
+            default: 0
+        }
+    },
+    watch: {
+       _activeIndex(val) {
+           if(val === 0) {
+              setTimeout(() => {
+                    this.fm2Show = true
+                    setTimeout(() => {
+                        this.fm3Show = true
+                    }, 200)
+                }, 1000) 
+           }else {
+                this.fm2Show = false
+                this.fm3Show = false
+                this.fm4Show = false
+                this.fm5Show = false
+                this.fm6Show = false
+                this.fm7Show = false
+                this.fm8Show = false
+                this.fm9Show = false
+           }
+       } 
+    },
+    computed: {
+        ...mapGetters([
+            'loadImgs'
+        ])
+    },
     mounted() {
-        setTimeout(() => {
-            this.fm2Show = true
+        if(this._activeIndex === 0) {
             setTimeout(() => {
-                this.fm3Show = true
-            }, 200)
-        }, 1500)
+                this.fm2Show = true
+                setTimeout(() => {
+                    this.fm3Show = true
+                }, 200)
+            }, 1000)
+        }
     },
     methods: {
         // 动画一
@@ -184,7 +219,7 @@ export default {
                     setTimeout(() => {
                         that.$emit("toJump2", true)
                         done()
-                    }, 1500)
+                    }, 200)
                 }
             })
         },
@@ -203,7 +238,8 @@ export default {
             height: 100%;
             position: relative;
             z-index: 1;
-            background: url(../assets/img/FM-1.jpg) no-repeat center;
+            background-repeat: no-repeat;
+            background-position: center;
             background-size: cover;
         }
         .fmImg_2 {
